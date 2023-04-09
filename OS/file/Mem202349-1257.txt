@@ -1,0 +1,35 @@
+capcity 1024
+fits firstfit
+file /CXX 1.cpp 0 1 cxx
+Dirs /CXX/dir1 dir1
+Dirs /CXX/dir2 dir2
+Dirs /CXX/D D
+---
+file /CXX/dir1 2.cpp 1 2 cxx
+file /CXX/dir1 3.cpp 5 10 cxx
+file /CXX/dir1 4.txt 15 20 txt
+Dirs /CXX/dir1/dir1 dir1
+Dirs /CXX/dir1/dir2 dir2
+---
+---
+Dirs /CXX/D/2021 2021
+Dirs /CXX/D/86159 86159
+Dirs /CXX/D/APPDATA APPDATA
+Dirs /CXX/D/CodeBlocks CodeBlocks
+Dirs /CXX/D/DownLoad DownLoad
+Dirs /CXX/D/MY_CODE MY_CODE
+Dirs /CXX/D/Users Users
+---
+---
+---
+---
+---
+---
+---
+---
+file /CXX/D/MY_CODE shiyan.cpp 3 2 cpp
+---
+---
+implMem 0 0 1 2 3 4 5 14 15 34 
+dirMap /CXX/D/Users /CXX/D/DownLoad /CXX/D/86159 /CXX/D/CodeBlocks /CXX/D/2021 /CXX/dir1/dir2 /CXX/D/APPDATA /CXX /CXX/dir2 /CXX/dir1 /CXX/D /CXX/D/MY_CODE /CXX/dir1/dir1 
+fileMap 5 14 /CXX/dir1 3.cpp 3 4 /CXX/D/MY_CODE shiyan.cpp 0 0 /CXX 1.cpp 15 34 /CXX/dir1 4.txt 1 2 /CXX/dir1 2.cpp 

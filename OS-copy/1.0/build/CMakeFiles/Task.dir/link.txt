@@ -1,0 +1,2 @@
+D:\CodeBlocks\MinGW\bin\ar.exe qc D:\MY_CODE\CPP\OS\lib\libTask.a CMakeFiles/Task.dir/src/Task.cpp.obj
+D:\CodeBlocks\MinGW\bin\ranlib.exe D:\MY_CODE\CPP\OS\lib\libTask.a

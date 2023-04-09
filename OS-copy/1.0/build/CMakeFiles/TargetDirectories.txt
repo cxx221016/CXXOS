@@ -1,0 +1,6 @@
+D:/MY_CODE/CPP/OS/build/CMakeFiles/Sche.dir
+D:/MY_CODE/CPP/OS/build/CMakeFiles/Task.dir
+D:/MY_CODE/CPP/OS/build/CMakeFiles/Mem.dir
+D:/MY_CODE/CPP/OS/build/CMakeFiles/main.dir
+D:/MY_CODE/CPP/OS/build/CMakeFiles/edit_cache.dir
+D:/MY_CODE/CPP/OS/build/CMakeFiles/rebuild_cache.dir
