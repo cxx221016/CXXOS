@@ -1,21 +1,28 @@
 # CXXOS
+
 ## 目录
 - [CXXOS](#cxxos)
   - [目录](#目录)
   - [摘要](#摘要)
-  - [VERSION](#version)
+  - [MODULE](#module)
+  - [BUG](#bug)
+    - [VERSION 3.1](#version-31)
+    - [VERSION 3.9](#version-39)
+    - [VERSION 4.0](#version-40)
   - [CONFIG](#config)
     - [request](#request)
     - [config](#config-1)
   - [SUMMARY](#summary)
+
 ## 摘要
->###### 大二下学习了操作系统这门课程，因此我本人对于实现一个操作系统比较感兴趣，但是无奈操作系统实现起来较为麻烦，因此我实现了一个基于C++的无GUI界面的操作系统
 
+> 大二下学习了操作系统这门课程，因此我本人对于实现一个操作系统比较感兴趣，但是无奈操作系统实现起来较为麻烦，因此我实现了一个基于C++的无GUI界面的操作系统
 
-## VERSION
->### 2023/4/9 version 3.0
+## MODULE
+
 
 * Mem module
+
 ```cpp
 
 struct File
@@ -48,11 +55,12 @@ private:
     std::string fits;
 };
 ```
+
 >Mem包含三个模块:File,Dirs,Mem
 >Mem实现的功能：
->>1. windows command line command
->>2. memory alloc and compact
->>3. Serial and deSerial
+>> 1. windows command line command
+>> 2. memory alloc and compact
+>> 3. Serial and deSerial
 
 >Mem未实现的功能
 >>1. file mount
@@ -201,6 +209,19 @@ private:
 ```
 > tlb，page,frame
 > VMem :进行虚拟内存的查找过程，并进行页表替换等工作
+
+
+## BUG
+### VERSION 3.1 
+> > 文件使用相对路径，防止bug
+
+### VERSION 3.9
+> > 添加了net模块，用于chat
+> > mem 改为shared_ptr
+
+### VERSION 4.0
+> > net 模块包括服务端和用户端，可进行文件下载和传输
+> > 但是由于g++和vs的不同，存在一点点bug
   
 ## CONFIG
 
@@ -233,6 +254,7 @@ private:
    * make 
    * cd ../bin
    * ./main
+
 
 ## SUMMARY
 虽然实现了一部分功能，但是还是有很大的缺陷，很多功能没有完善，这个月的目标是实现文件挂载，同时对命令行命令进行更进一步带参数的拓展

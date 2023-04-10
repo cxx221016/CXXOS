@@ -1,0 +1,1 @@
+ D:/MY_CODE/CXXOS/OS_SERVER/lib/libMem.a D:/MY_CODE/CXXOS/OS_SERVER/lib/libVMem.a D:/MY_CODE/CXXOS/OS_SERVER/lib/libNet.a -lws2_32 -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 
