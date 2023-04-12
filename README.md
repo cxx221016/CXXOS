@@ -222,6 +222,7 @@ private:
 ### VERSION 4.0
 > > net 模块包括服务端和用户端，可进行文件下载和传输
 > > 但是由于g++和vs的不同，存在一点点bug
+> > VMem 模块 tlbsize和pagesize写反，同时输出进制写错了
   
 ## CONFIG
 
