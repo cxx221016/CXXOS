@@ -9,6 +9,7 @@
     - [VERSION 3.1](#version-31)
     - [VERSION 3.9](#version-39)
     - [VERSION 4.0](#version-40)
+    - [VERSION 4.1](#version-41)
   - [CONFIG](#config)
     - [request](#request)
     - [config](#config-1)
@@ -223,6 +224,11 @@ private:
 > > net 模块包括服务端和用户端，可进行文件下载和传输
 > > 但是由于g++和vs的不同，存在一点点bug
 > > VMem 模块 tlbsize和pagesize写反，同时输出进制写错了
+
+### VERSION 4.1
+> > 对于存储文件采用了二进制存储，压缩空间同时保证数据安全
+> > 修复了网络通信的bug
+> > 增加内核模块，直接处理所有相关量，不再保持main函数
   
 ## CONFIG
 

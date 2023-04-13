@@ -1,0 +1,3 @@
+file(REMOVE_RECURSE
+  "D:/MY_CODE/CXXOS/OS_SERVER/lib/libMem.a"
+)
