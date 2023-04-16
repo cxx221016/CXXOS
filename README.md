@@ -5,11 +5,17 @@
   - [目录](#目录)
   - [摘要](#摘要)
   - [MODULE](#module)
+    - [Mem module--VERSION4.3](#mem-module--version43)
+    - [Func module--VERSION3.1](#func-module--version31)
+    - [Threadpool module--VERSION3.1](#threadpool-module--version31)
+    - [VMem module----VERSION3.1](#vmem-module----version31)
   - [BUG](#bug)
     - [VERSION 3.1](#version-31)
     - [VERSION 3.9](#version-39)
     - [VERSION 4.0](#version-40)
     - [VERSION 4.1](#version-41)
+    - [VERSION 4.2](#version-42)
+    - [VERSION 4.3](#version-43)
   - [CONFIG](#config)
     - [request](#request)
     - [config](#config-1)
@@ -17,12 +23,13 @@
 
 ## 摘要
 
-> 大二下学习了操作系统这门课程，因此我本人对于实现一个操作系统比较感兴趣，但是无奈操作系统实现起来较为麻烦，因此我实现了一个基于C++的无GUI界面的操作系统
+> 大二下学习了操作系统这门课程，因此我本人对于实现一个操作系统比较感兴趣，但是无奈操作系统实现起来较为麻烦，因此我实现了一个基于C++的无GUI界面的操作系统 
+> 代码量2600行
 
 ## MODULE
 
 
-* Mem module
+### Mem module--VERSION4.3
 
 ```cpp
 
@@ -30,6 +37,7 @@ struct File
 {
     std::string path;
     std::string name;
+    std::string limits;
     int address;
     int len;
     std::string data;
@@ -39,6 +47,7 @@ struct Dirs
 {
     std::string path;
     std::string name;
+    std::string limits;
     std::shared_ptr<Dirs> pre;
     std::vector<std::shared_ptr<File>> files;
     std::vector<std::shared_ptr<Dirs>> dirs;
@@ -67,7 +76,7 @@ private:
 >>1. file mount
 >>2. edit file 
 
-* Func module
+### Func module--VERSION3.1
 ```cpp
 
 using namespace std::string_literals;
@@ -95,7 +104,7 @@ private:
 >Memtable :记录并管理Mem的Serial文件，便于deSerial
 >fileattr :是描述Mem的Serial文件的特性，包括timestamp，id，filepath
 
-* Threadpool module
+### Threadpool module--VERSION3.1
 ```cpp
 struct Attr
 {
@@ -168,7 +177,7 @@ private:
 >> submit 使用C++17特性，对于任意类型的函数进行推导，得到含有结果的shared_future，同时将函数封装为void()类型进行管理
 
 
-* VMem module
+### VMem module----VERSION3.1
 ```cpp
 using Tran =std::function<std::pair<int,int>(int)>;
 
@@ -229,6 +238,15 @@ private:
 > > 对于存储文件采用了二进制存储，压缩空间同时保证数据安全
 > > 修复了网络通信的bug
 > > 增加内核模块，直接处理所有相关量，不再保持main函数
+
+### VERSION 4.2
+> > 对Memtable进行了二进制加密，增加可靠性
+> > 重载了输出函数，使得结构大幅缩减
+
+
+### VERSION 4.3
+> > 增加了文件权限
+> > 同时增加了文件权限相应函数
   
 ## CONFIG
 
