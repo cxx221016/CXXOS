@@ -882,7 +882,7 @@ std::istream& operator>>(std::istream& ifs,Mem& mem)
             ss>>tmpfile;
             auto file=std::make_shared<File>(tmpfile);
             cur->files.push_back(file);
-            mem.fileMap[std::make_pair(address,address+len-1)]=file;
+            mem.fileMap[std::make_pair(file->address,file->address+len-1)]=file;
             flag=true;
         }
         else if(type=="Dirs")
@@ -894,7 +894,7 @@ std::istream& operator>>(std::istream& ifs,Mem& mem)
             tmpdir.pre=cur;
             auto dir=std::make_shared<Dirs>(tmpdir);
             cur->dirs.push_back(dir);
-            mem.dirMap[path]=dir;
+            mem.dirMap[dir->path]=dir;
             q.push(dir);
         }
     }

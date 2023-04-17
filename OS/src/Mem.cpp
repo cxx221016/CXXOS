@@ -203,6 +203,38 @@ std::vector<std::shared_ptr<Dirs>> Mem::SearchDir(const std::string &name)
     }
     return res;
 }
+
+std::shared_ptr<File> Mem::findFile(const std::vector<std::string>& args)
+{
+    if(args.size()==1)
+    {
+        return findFile(args[0]);
+    }
+    else if(args.size()==2)
+    {
+        return findFile(args[0],args[1]);
+    }
+    else
+    {
+        std::cerr<<"Error: Invalid command.\n";
+        return nullptr;
+    }
+}
+
+
+std::shared_ptr<File> Mem::findFile(const std::string& name)
+{
+    for(auto& file:current->files)
+    {
+        if(file->name==name)
+        {
+            return file;
+        }
+    }
+    std::cerr<<"Error: No such file.\n";
+    return nullptr;
+}
+
 std::shared_ptr<File> Mem::findFile(const std::string& path,const std::string& name)
 {
     auto dir=findDir(path);
@@ -220,8 +252,52 @@ std::shared_ptr<File> Mem::findFile(const std::string& path,const std::string& n
     std::cerr<<"Error: No such file.\n";
     return nullptr;
 }
+
+std::shared_ptr<Dirs> Mem::findDir(const std::vector<std::string>& args)
+{
+    if(args.size()==1)
+    {
+        return findDir(args[0]);
+    }
+    else if(args.size()==2)
+    {
+        return findDir(args[0],args[1]);
+    }
+    else
+    {
+        std::cerr<<"Error: Invalid command.\n";
+        return nullptr;
+    }
+}
+
+std::shared_ptr<Dirs> Mem::findDir(const std::string& path,const std::string& name)
+{
+    auto dir=findDir(path);
+    if(dir==nullptr)
+    {
+        return nullptr;
+    }
+    for(auto &dir:dir->dirs)
+    {
+        if(dir->name==name)
+        {
+            return dir;
+        }
+    }
+    std::cerr<<"Error: No such directory.\n";
+    return nullptr;
+}
+
+
 std::shared_ptr<Dirs> Mem::findDir(const std::string& path)
 {
+    for(auto& dir:current->dirs)
+    {
+        if(dir->name==path)
+        {
+            return dir;
+        }
+    }
     if(dirMap.find(path)==dirMap.end())
     {
         std::cerr<<"Error: No such directory.\n";
@@ -407,6 +483,99 @@ void Mem::del(const std::string &name) // delete file
         else it++;
     }
     std::cerr << "Error: File not found.\n";
+}
+
+void Mem::ren(const std::vector<std::string>& args,std::string newname)
+{
+    auto file=findFile(args);
+    auto dir=findDir(args);
+    if(file!=nullptr && dir!=nullptr)
+    {
+        std::cerr<<"Error: File and directory have the same name.\n";
+        return;
+    }
+    if(file==nullptr && dir==nullptr)
+    {
+        std::cerr<<"Error: File or directory not found.\n";
+        return;
+    }
+    if(file!=nullptr)
+    {
+        file->name=newname;
+    }
+    if(dir!=nullptr)
+    {
+        dir->name=newname;
+    }
+}
+
+void Mem::edit(const std::vector<std::string>& args)
+{
+    auto file=findFile(args);
+    if(file==nullptr)
+    {
+        std::cerr<<"Error: File not found.\n";
+        return;
+    }
+    std::cout<<"begin to edit file "<<file->name<<std::endl;
+    std::string newdata;
+    std::cin>>newdata;
+    file->data=newdata;
+    std::cout<<"edit finished.\n";
+}
+
+void Mem::fc(const std::vector<std::string>& args1,const std::vector<std::string>& args2)
+{
+    auto file1=findFile(args1);
+    auto file2=findFile(args2);
+    if(file1==nullptr || file2==nullptr)
+    {
+        std::cerr<<"Error: File not found.\n";
+        return;
+    }
+    if(file1->data==file2->data)
+    {
+        std::cout<<"Files are the same.\n";
+    }
+    else
+    {
+        std::cout<<"Files are different.\n";
+        //std::cout<<"file1data: "<<file1->data<<"  file2data: "<<file2->data<<std::endl;
+        printf("file1data: %-20s  file2data: %-20s\n",file1->data.c_str(),file2->data.c_str());
+        std::cout<<"Different part:\n";
+        int i=0;
+        for(;i<file1->data.size() && i<file2->data.size();i++)
+        {
+            if(file1->data[i]!=file2->data[i])
+            {
+                //std::cout<<"idx: "<<i<<"file1data: "<<file1->data[i]<<"  file2data: "<<file2->data[i]<<std::endl;
+                printf("idx: %-5d  file1data: %-20c  file2data: %-20c\n",i,file1->data[i],file2->data[i]);
+            }
+        }
+        while(i<file1->data.size())
+        {
+            //std::cout<<"idx: "<<i<<"file1data: "<<file1->data[i]<<"  file2data: null"<<std::endl;
+            printf("idx: %-5d  file1data: %-20c  file2data: %-20s\n",i,file1->data[i],"null");
+            ++i;
+        }
+        while(i<file2->data.size())
+        {
+            //std::cout<<"idx: "<<i<<"file1data: null"<<"  file2data: "<<file2->data[i]<<std::endl;
+            printf("idx: %-5d  file1data: %-20s  file2data: %-20c\n",i,"null",file2->data[i]);
+            ++i;
+        }
+
+    }
+}
+void Mem::cat(const std::vector<std::string>& args)
+{
+    auto file=findFile(args);
+    if(file==nullptr)
+    {
+        std::cerr<<"Error: File not found.\n";
+        return;
+    }
+    std::cout<<file->data<<std::endl;
 }
 
 void Mem::chmod(const std::string& path,std::vector<std::string>& args)
@@ -882,7 +1051,7 @@ std::istream& operator>>(std::istream& ifs,Mem& mem)
             ss>>tmpfile;
             auto file=std::make_shared<File>(tmpfile);
             cur->files.push_back(file);
-            mem.fileMap[std::make_pair(address,address+len-1)]=file;
+            mem.fileMap[std::make_pair(file->address,file->address+len-1)]=file;
             flag=true;
         }
         else if(type=="Dirs")
@@ -894,7 +1063,7 @@ std::istream& operator>>(std::istream& ifs,Mem& mem)
             tmpdir.pre=cur;
             auto dir=std::make_shared<Dirs>(tmpdir);
             cur->dirs.push_back(dir);
-            mem.dirMap[path]=dir;
+            mem.dirMap[dir->path]=dir;
             q.push(dir);
         }
     }

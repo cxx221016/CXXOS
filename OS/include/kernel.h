@@ -14,7 +14,7 @@ class kernel
     std::shared_ptr<Mem> mem = std::make_shared<Mem>();
     std::shared_ptr<threadpool> pool = std::make_shared<threadpool>(1);
     std::priority_queue<std::pair<std::shared_future<int>, Attr>, std::vector<std::pair<std::shared_future<int>, Attr>>, OutComp> ress;
-
+    std::vector<std::string> log;
 public:
     kernel()
     {
@@ -33,13 +33,32 @@ public:
         if (cmd == "y")
         {
             bash("deSerial");
+            log.push_back("load from file");
         }
         else
         {
             std::cout << "Load failed\n";
             bash("null");
+            log.push_back("no load");
         }
         // std::cout<<"kernel loaded\n";
+    }
+
+    ~kernel()
+    {
+        static std::string base = "..\\file\\Log";
+        static std::string ext = ".txt";
+        std::time_t t = std::time(nullptr);
+        auto tm_t = std::localtime(&t);
+        std::string time = std::to_string(tm_t->tm_year + 1900) + std::to_string(tm_t->tm_mon + 1) + std::to_string(tm_t->tm_mday) + "-" + std::to_string(tm_t->tm_hour) + std::to_string(tm_t->tm_min) + std::to_string(tm_t->tm_sec);
+        // std::string time="1:1";
+        std::string thisfilename = base + time + ext;
+        std::ofstream ofs(thisfilename);
+        for (auto &i : log)
+        {
+            ofs << i << '\n';
+        }
+        ofs.close();
     }
 
     void run()
@@ -63,8 +82,16 @@ public:
         while(std::getline(std::cin,cmd))
         {
             bool flag = true;
-            if(cmd.empty()) bash("null");
-            else flag = bash(cmd);
+            if(cmd.empty()) 
+            {
+                bash("null");
+                log.push_back("null");
+            }
+            else 
+            {
+                flag = bash(cmd);
+                log.push_back(cmd);
+            }
             if(!flag) break;
         }
     }
@@ -160,6 +187,7 @@ bool kernel::bash(const std::vector<std::string> &cmds)
         // file
         if (cmd == "findFile")
         {
+            /*
             std::string path;
             std::string name;
             // getstring(path);
@@ -167,6 +195,8 @@ bool kernel::bash(const std::vector<std::string> &cmds)
             get(path, idx, cmds);
             get(name, idx, cmds);
             auto tmp = mem->findFile(path, name);
+            */
+            auto tmp=mem->findFile(std::vector<std::string>{cmds.begin()+idx,cmds.end()});
             if (tmp == nullptr)
                 std::cout << "Not Found\n";
             else
@@ -174,10 +204,13 @@ bool kernel::bash(const std::vector<std::string> &cmds)
         }
         else if (cmd == "findDir")
         {
+            /*
             std::string name;
             // getstring(name);
             get(name, idx, cmds);
             auto tmp = mem->findDir(name);
+            */
+            auto tmp=mem->findDir(std::vector<std::string>{cmds.begin()+idx,cmds.end()});
             if (tmp == nullptr)
                 std::cout << "Not Found\n";
             else
@@ -320,6 +353,37 @@ bool kernel::bash(const std::vector<std::string> &cmds)
             // getstring(name);
             get(name, idx, cmds);
             mem->del(name);
+        }
+        else if (cmd=="ren")
+        {
+            mem->ren(std::vector<std::string>{cmds.begin()+idx,cmds.end()-1},cmds.back());
+        }
+        else if(cmd=="edit")
+        {
+            mem->edit(std::vector<std::string>{cmds.begin()+idx,cmds.end()});
+            return true;
+        }
+        else if(cmd=="fc")
+        {
+            std::vector<std::string> args1,args2;
+            std::string tmp;
+            get(tmp,idx,cmds);
+            args1.push_back(tmp);
+            if(tmp[0]=='/')
+            {
+                get(tmp,idx,cmds);
+                args1.push_back(tmp);
+            }
+            while(idx<n)
+            {
+                get(tmp,idx,cmds);
+                args2.push_back(tmp);
+            }
+            mem->fc(args1,args2);
+        }
+        else if(cmd=="cat")
+        {
+            mem->cat(std::vector<std::string>{cmds.begin()+idx,cmds.end()});
         }
         else if (cmd == "cd")
         {
@@ -515,6 +579,7 @@ bool kernel::bash(const std::vector<std::string> &cmds)
             std::cout << "rd <name> : remove directory\n";
             std::cout << "type <name> <len> <data> : type file\n";
             std::cout << "del <name> : delete file\n";
+
             std::cout << "cd <name> : change directory\n";
             std::cout << "dir : list directory\n";
             std::cout << "exit : exit\n";

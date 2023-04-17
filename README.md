@@ -249,6 +249,12 @@ private:
 ### VERSION 4.3
 > > 增加了文件权限
 > > 同时增加了文件权限相应函数
+> > bug 构建内存时出现bug，已经修复
+> > ren
+> > edit
+> > findfile,finddir优化
+> > fc
+> > cat
   
 ## CONFIG
 
@@ -256,7 +262,7 @@ private:
 > std=c++17
 
 ### config
-* git@github.com:cxx221016/CXXOS.git
+* git clone git@github.com:cxx221016/CXXOS.git
 * cd OS
 * for windows with mingw && cmake
    * rd /S build

@@ -117,6 +117,27 @@ private:
     std::unordered_map<std::pair<int,int>,std::shared_ptr<File>> fileMap;
     std::unordered_map<std::string,std::shared_ptr<Dirs>> dirMap;
     std::string fits;
+private:
+    //Mem
+    int alloc(int len);
+    void free(int address,int len);
+    int firstfit(int len);
+    int bestfit(int len);
+    int worstfit(int len);
+
+    //File
+
+    std::shared_ptr<File> findFile(const std::string& name);
+    std::shared_ptr<File> findFile(const std::string& path,const std::string& name);
+    std::shared_ptr<Dirs> findDir(const std::string& path);
+    std::shared_ptr<Dirs> findDir(const std::string& path,const std::string& name);
+    void addFile(const std::string& path,const File& file);
+    void addFile(const std::string& path,std::shared_ptr<File> file);
+    void addDir(const std::string& path,const Dirs& dir);
+    void addDir(const std::string& path,std::shared_ptr<Dirs> dir);
+
+    template<typename T>
+    void implchmod(T t,std::vector<std::string>& args);
 public:
     Mem(unsigned int capcity=1024,const std::string& fits="firstfit");
     Mem(const Mem&)=delete;
@@ -125,36 +146,29 @@ public:
     Mem& operator=(Mem&&)=delete;
 
     //Mem
-    int alloc(int len);
-    void free(int address,int len);
     void compact();
     void status();
-    int firstfit(int len);
-    int bestfit(int len);
-    int worstfit(int len);
 
     //File
 
-    std::vector<std::shared_ptr<File>> SearchFile(const std::string &name);
-    std::vector<std::shared_ptr<Dirs>> SearchDir(const std::string &name);
-    std::shared_ptr<File> findFile(const std::string& path,const std::string& name);
-    std::shared_ptr<Dirs> findDir(const std::string& path);
-    void addFile(const std::string& path,const File& file);
-    void addFile(const std::string& path,std::shared_ptr<File> file);
-    void addFile(const std::string& path,const std::string& name,int len,const std::string& data="cxxos");
-    void addDir(const std::string& path,const Dirs& dir);
-    void addDir(const std::string& path,std::shared_ptr<Dirs> dir);
-    void addDir(const std::string& path,const std::string& name);
-    void eraseFile(std::shared_ptr<File> file);
-    void eraseDir(std::shared_ptr<Dirs> dir);
+    std::vector<std::shared_ptr<File>> SearchFile(const std::string &name);//search file
+    std::vector<std::shared_ptr<Dirs>> SearchDir(const std::string &name);//search dir
+    std::shared_ptr<File> findFile(const std::vector<std::string>& args);//find file
+    std::shared_ptr<Dirs> findDir(const std::vector<std::string>& args);//find dir
+    void addFile(const std::string& path,const std::string& name,int len,const std::string& data="cxxos");//add file
+    void addDir(const std::string& path,const std::string& name);//add dir
+    void eraseFile(std::shared_ptr<File> file);//delete file
+    void eraseDir(std::shared_ptr<Dirs> dir);//delete dir and all files in it
     void md(const std::string& name); //make directory
     void rd(const std::string& name); //remove directory
     void type(const std::string &name,int len=12,const std::string &data="cxxos"); //type file
     void del(const std::string& name); //delete file
+    void ren(const std::vector<std::string>& args,std::string newname); //rename file
+    void edit(const std::vector<std::string>& args);//edit file
+    void fc(const std::vector<std::string>& args1,const std::vector<std::string>& args2); //file compare
+    void cat(const std::vector<std::string>& args); //cat file
     void chmod(const std::string& path,std::vector<std::string>& args); //change file mode
     void chmod(const std::string& path,const std::string& name,std::vector<std::string>& args); //change file mode
-    template<typename T>
-    void implchmod(T t,std::vector<std::string>& args);
     void showmod(const std::string& path,const std::string& name); //show file mode
     void showmod(const std::string& path); //show file mode
     void cd(const std::string& name); //change directory
