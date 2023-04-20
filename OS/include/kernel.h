@@ -36,12 +36,6 @@ class kernel
     std::shared_ptr<threadpool> pool = std::make_shared<threadpool>(1);
     std::priority_queue<std::pair<std::shared_future<int>, Attr>, std::vector<std::pair<std::shared_future<int>, Attr>>, OutComp> ress;
     std::vector<std::string> log;
-    std::vector<std::string> users
-    {
-        "root",
-        "user"
-    };
-    int user;
     static void infos()
     {
         std::cout<<"kernel "<<kernelinfos["kernel"]<<'\n';
@@ -57,9 +51,8 @@ class kernel
     }
 
 public:
-    kernel(int user=0)
+    kernel()
     {
-        this->user=user;
         infos();
         std::cout << "Load from file? (y/n)\n";
         std::string cmd;
@@ -68,12 +61,39 @@ public:
         {
             bash("deSerial");
             log.push_back("load from file");
+            std::cout<<"please input your password of user "<<mem->usrname<<": ";
+            std::string password;
+            std::cin>>password;
+            if(mem->login(mem->usrname,password))
+            {
+                std::cout<<"login success\n";
+                bash("null");
+            }
+            else
+            {
+                mem->usrname="null";
+                std::cout<<"login failed\n";
+            }
+
         }
         else
         {
-            std::cout << "Load failed\n";
             bash("null");
             log.push_back("no load");
+            std::cout<<"please input your password of user "<<mem->usrname<<": ";
+            std::string password;
+            std::cin>>password;
+            if(mem->login(mem->usrname,password))
+            {
+                std::cout<<"login success\n";
+                bash("null");
+            }
+            else
+            {
+                mem->usrname="null";
+                std::cout<<"login failed\n";
+            }
+
         }
         // std::cout<<"kernel loaded\n";
     }
@@ -138,6 +158,11 @@ public:
 
 bool kernel::bash(const std::vector<std::string> &cmds)
 {
+    if(mem->usrname=="null"&& cmds[0]!="login" && cmds[0]!="exit")
+    {
+        std::cout<<"please login\n";
+        return true;
+    }
     int idx = 0;
     int n = cmds.size();
 
@@ -172,7 +197,67 @@ bool kernel::bash(const std::vector<std::string> &cmds)
             return true;
         }
         // file
-        if (cmd == "findFile")
+        if(cmd == "logout")
+        {
+            mem->logout();
+            std::cout<<"logout success\n";
+            return true;
+        }
+        else if(cmd == "login")
+        {
+            int n=cmds.size();
+            if(n!=3)
+            {
+                std::cout<<"login failed\n";
+                return true;
+            }
+            std::string usr;
+            std::string password;
+            get(usr, idx, cmds);
+            get(password, idx, cmds);
+            if(mem->login(usr,password)) std::cout<<"login success\n";
+            else
+            {
+                std::cout<<"login failed\n";
+                bash("logout");
+                return true;
+            }
+        }
+        else if(cmd =="addusr")
+        {
+            if(mem->usrname!="root")
+            {
+                std::cout<<"you are not root\n";
+                bash("null");
+                return true;
+            }
+            std::string usr;
+            std::string password;
+            get(usr, idx, cmds);
+            get(password, idx, cmds);
+            mem->addusr(usr,password);
+        }
+        else if(cmd =="delusr")
+        {
+            if(mem->usrname!="root")
+            {
+                std::cout<<"you are not root\n";
+                bash("null");
+                return true;
+            }
+            std::string usr;
+            get(usr, idx, cmds);
+            mem->delusr(usr);
+        }
+        else if(cmd =="changeusr")
+        {
+            std::string usr;
+            std::string password;
+            get(usr, idx, cmds);
+            get(password, idx, cmds);
+            mem->login(usr,password);
+        }
+        else if (cmd == "findFile")
         {
             std::string init;
             get(init, idx, cmds);
@@ -239,6 +324,14 @@ bool kernel::bash(const std::vector<std::string> &cmds)
             std::string init;
             get(init, idx, cmds);
             mem->showmod(init);
+        }
+        else if(cmd=="chmon")
+        {
+            std::string init;
+            std::string usr;
+            get(init, idx, cmds);
+            get(usr, idx, cmds);
+            mem->chmon(init,usr);
         }
         else if (cmd == "md")
         {
@@ -380,7 +473,7 @@ bool kernel::bash(const std::vector<std::string> &cmds)
         }
         else if(cmd=="user")
         {
-            std::cout<<"user:"<<users[user]<<std::endl;
+            std::cout<<"user:"<<mem->usrname<<std::endl;
         }
         else if (cmd == "exit")
         {
@@ -437,6 +530,13 @@ bool kernel::bash(const std::vector<std::string> &cmds)
             }
             else
                 bash(cmd);
+
+            static bool flag = false;
+            if(!flag)
+            {
+                flag = true;
+                return true;
+            }
         }
         else if (cmd == "VMemget")
         {

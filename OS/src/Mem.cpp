@@ -4,8 +4,51 @@ Mem::Mem(unsigned int capacity, const std::string &fits) : capacity(capacity), f
 {
     root = std::make_shared<Dirs>("/CXX", "CXX", nullptr);
     dirMap["/CXX"] = root;
+    usrMap["root"]="031204";
+    usrname="root";
     // root=new Dirs("/CXX","CXX",nullptr);
     current = root;
+}
+
+//system
+bool Mem::login(const std::string& funcusrname,const std::string& password)
+{
+    if(usrMap.find(funcusrname)==usrMap.end())
+    {
+        std::cerr<<"Error: User not found.\n";
+        return false;
+    }
+    if(usrMap[funcusrname]!=password)
+    {
+        std::cerr<<"Error: Wrong password.\n";
+        return false;
+    }
+    this->usrname=funcusrname;
+    return true;
+}
+void Mem::logout()
+{
+    this->usrname="null";
+}
+
+void Mem::addusr(const std::string& funcusrname,const std::string& password)
+{
+    if(usrMap.find(funcusrname)!=usrMap.end())
+    {
+        std::cerr<<"Error: User already exists.\n";
+        return;
+    }
+    usrMap[funcusrname]=password;
+}
+
+void Mem::delusr(const std::string& funcusrname)
+{
+    if(usrMap.find(funcusrname)==usrMap.end())
+    {
+        std::cerr<<"Error: User not found.\n";
+        return;
+    }
+    usrMap.erase(funcusrname);
 }
 
 // Mem
@@ -536,6 +579,10 @@ void Mem::cat(const std::string& args)
 template<typename T>
 void Mem::implchmod(T t,const std::vector<std::string>& args)
 {
+    if(!hasPermission(t,this->usrname))
+    {
+        return;
+    }
     static std::unordered_map<char,int> filelimits
     {
         {'r',1},
@@ -567,7 +614,7 @@ void Mem::implchmod(T t,const std::vector<std::string>& args)
             {
                 if(tmp->count(arg[i]))
                 {
-                    t->limits[(*tmp)[arg[i]]]=arg[i];
+                    t->limits[this->usrname][(*tmp)[arg[i]]]=arg[i];
                 }
             }
         }
@@ -577,7 +624,7 @@ void Mem::implchmod(T t,const std::vector<std::string>& args)
             {
                 if(tmp->count(arg[i]))
                 {
-                    t->limits[(*tmp)[arg[i]]]='-';
+                    t->limits[this->usrname][(*tmp)[arg[i]]]='-';
                 }
             }
         }
@@ -587,6 +634,43 @@ void Mem::implchmod(T t,const std::vector<std::string>& args)
             return;
         }
     }
+}
+
+template<typename T>
+bool  Mem::hasPermission(T t,const std::string& funcusrname)
+{
+    if(usrMap.count(funcusrname)==0)
+    {
+        std::cerr<<"Error: User not found.\n";
+        return false;
+    }
+    if(t->limits.count(funcusrname)==0)
+    {
+        std::cerr<<"Error: Permission denied.\n";
+        return false;
+    }
+    return true;
+}
+
+template<typename T>
+bool Mem::hasPermission(T t,const std::string& funcusrname,const char& limit)
+{
+    static std::unordered_map<char,int> maplimits
+    {
+        {'r',1},
+        {'w',2},
+        {'x',3}
+    };
+    if(!hasPermission(t,funcusrname))
+    {
+        return false;
+    }
+    if(t->limits[funcusrname][maplimits[limit]]=='-')
+    {
+        std::cerr<<"Error: Permission denied.\n";
+        return false;
+    }
+    return true;
 }
 
 void Mem::showmod(const std::string& init)
@@ -599,11 +683,67 @@ void Mem::showmod(const std::string& init)
     }
     if(file)
     {
-        std::cout<<file->limits<<std::endl;
+        for(auto & i:file->limits)
+        {
+            std::cout<<i.first<<": "<<i.second<<std::endl;
+        }
     }
     else
     {
-        std::cout<<dir->limits<<std::endl;
+        for(auto & i:dir->limits)
+        {
+            std::cout<<i.first<<": "<<i.second<<std::endl;
+        }
+    }
+}
+
+void Mem::chmon(const std::string& init,const std::string& toaddname,bool flag)
+{
+    auto file=findFile(init);
+    auto dir=findDir(init);
+    if(file==nullptr && dir==nullptr)
+    {
+        return;
+    }
+    if(file)
+    {
+        if(!hasPermission(file,this->usrname))
+        {
+            return;
+        }
+        if(usrMap.count(toaddname)==0)
+        {
+            std::cout<<"Error: No such user.\n";
+            return;
+        }
+        if(flag)
+        {
+            file->limits[toaddname]=file->limits[this->usrname];
+        }
+        else
+        {
+            if(file->limits.count(toaddname)) file->limits.erase(toaddname);
+        }
+    }
+    else
+    {
+        if(!hasPermission(dir,this->usrname))
+        {
+            return;
+        }
+        if(usrMap.count(toaddname)==0)
+        {
+            std::cout<<"Error: No such user.\n";
+            return;
+        }
+        if(flag)
+        {
+            dir->limits[toaddname]=dir->limits[this->usrname];
+        }
+        else
+        {
+            if(dir->limits.count(toaddname)) dir->limits.erase(toaddname);
+        }
     }
 }
 
@@ -730,14 +870,14 @@ void Mem::dir() // list directory
     for (auto &dir : current->dirs)
     {
         // std::cout<<dir.name<<'\t';
-        //printf("name: %-20s path: %-10s limits: %s\n", dir->name.c_str(), dir->path.c_str(),dir->limits.c_str());
-        std::cout<<*dir;
+        printf("name: %-20s path: %-10s \n", dir->name.c_str(), dir->path.c_str());
+        //std::cout<<*dir;
     }
     for (auto &file : current->files)
     {
         // std::cout<<file.name<<'\t';
-        //printf("name: %-20s path: %-10s address: %-10d len: %-10d data: %s limits: %s\n", file->name.c_str(), file->path.c_str(), file->address, file->len,file->data.c_str(),file->limits.c_str());
-        std::cout<<*file;
+        printf("name: %-20s path: %-10s address: %-10d len: %-10d data: %s \n", file->name.c_str(), file->path.c_str(), file->address, file->len,file->data.c_str());
+        //std::cout<<*file;
     }
 }
 
@@ -915,6 +1055,12 @@ unsigned int Mem::getcapacity()
 
 std::ostream& operator<<(std::ostream& os,const Mem& mem)
 {
+    for(auto& i:mem.usrMap)
+    {
+        os<<i.first<<' '<<i.second<<' ';
+    }
+    os<<'\n';
+    os<<mem.usrname<<'\n';
     os<<"capacity"<<' '<<mem.capacity<<'\n';
     os<<"fits"<<' '<<mem.fits<<'\n';
     std::queue<std::shared_ptr<Dirs>> q;
@@ -973,6 +1119,22 @@ std::istream& operator>>(std::istream& ifs,Mem& mem)
     std::string data;
     std::stringstream ss;
     std::string pass;
+
+    //usrMap
+    getline(ifs,line);
+    ss.clear();
+    ss.str(line);
+    std::string usr,num;
+    while(ss>>usr>>num)
+    {
+        mem.usrMap[usr]=num;
+    }
+
+    //usrname
+    getline(ifs,line);
+    ss.clear();
+    ss.str(line);
+    ss>>mem.usrname;
 
     //capacity
     getline(ifs,line);

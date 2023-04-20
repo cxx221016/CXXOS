@@ -189,10 +189,10 @@ CMakeFiles/BinarySerial.dir/clean:
 # Target rules for target CMakeFiles/main.dir
 
 # All Build rule for target.
-CMakeFiles/main.dir/all: CMakeFiles/Net.dir/all
-CMakeFiles/main.dir/all: CMakeFiles/BinarySerial.dir/all
 CMakeFiles/main.dir/all: CMakeFiles/Mem.dir/all
 CMakeFiles/main.dir/all: CMakeFiles/VMem.dir/all
+CMakeFiles/main.dir/all: CMakeFiles/Net.dir/all
+CMakeFiles/main.dir/all: CMakeFiles/BinarySerial.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\main.dir\build.make CMakeFiles/main.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\main.dir\build.make CMakeFiles/main.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=D:\MY_CODE\CXXOS\OS\build\CMakeFiles --progress-num=10,11 "Built target main"

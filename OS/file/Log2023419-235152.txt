@@ -1,7 +1,0 @@
-load from file
-dir
-user
-version
-capacity
-time
-exit

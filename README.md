@@ -17,6 +17,7 @@
     - [VERSION 4.2](#version-42)
     - [VERSION 4.3](#version-43)
     - [VERSION 4.4](#version-44)
+    - [VERSION 5.0](#version-50)
   - [CONFIG](#config)
     - [request](#request)
     - [config](#config-1)
@@ -261,6 +262,12 @@ private:
 ### VERSION 4.4
 > > 更改文件索引方式以及底层实现
 > > 增加相应文件操作
+
+
+### VERSION 5.0
+> > 添加用户以及对应权限
+> > 对于各函数权限细化，首先通过函数判断是否具有权限
+> > 增加改变用户
   
 ## CONFIG
 

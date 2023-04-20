@@ -25,18 +25,20 @@ struct File
     std::string name;
     int address;
     int len;
-    std::string  limits;
+    std::unordered_map<std::string,std::string> limits;
     std::string data;
     //File(int begin,int end,const std::string& name="CXX:"):begin(begin),end(end),name(name){}
     File()=default;
-    File(const std::string& path,const std::string& name,int address=0,int len=0,const std::string& data="cxxos",const std::string& limits="-rw-")
+    File(const std::string& path,const std::string& name,int address=0,int len=0,const std::string& data="cxxos",const std::string& usr="root")
     {
         this->path=path;
         this->name=name;
         this->data=data;
         this->address=address;
         this->len=len;
-        this->limits=limits;
+        this->limits["root"]="-rwx";
+        if(usr!="root")
+            this->limits[usr]="-rwx";
     }
     File(const File&)=default;
     File(File&&)=default;
@@ -47,8 +49,13 @@ struct File
     {
         //os << "path: " << file.path << " name: " << file.name << " address: " << file.address << " len: " << file.len << " data: " << file.data << " limits: " << file.limits;
         char buf[4096];
-        sprintf(buf,"path: %-20s name: %-20s address: %-20d len: %-20d data: %-20s limits: %-5s\n",file.path.c_str(),file.name.c_str(),file.address,file.len,file.data.c_str(),file.limits.c_str());
+        sprintf(buf,"path: %-20s name: %-20s address: %-20d len: %-20d data: %-20s ",file.path.c_str(),file.name.c_str(),file.address,file.len,file.data.c_str());
         os<<buf;
+        for(auto& i:file.limits)
+        {
+            os<<i.first<<" "<<i.second<<" ";
+        }
+        os<<std::endl;
         return os;
     }
 
@@ -56,7 +63,12 @@ struct File
     {
         std::string pass;
         //is>>pass >> file.path >> file.name >> file.address >> file.len >> file.data;
-        is>>pass>>file.path>>pass>>file.name>>pass>>file.address>>pass>>file.len>>pass>>file.data>>pass>>file.limits;
+        is>>pass>>file.path>>pass>>file.name>>pass>>file.address>>pass>>file.len>>pass>>file.data;
+        std::string usrname,limit;
+        while(is>>usrname>>limit)
+        {
+            file.limits[usrname]=limit;
+        }
         return is;
     }
 };
@@ -65,19 +77,21 @@ struct Dirs
 {
     std::string path;
     std::string name;
-    std::string limits;
+    std::unordered_map<std::string,std::string> limits;
     std::shared_ptr<Dirs> pre;
     std::vector<std::shared_ptr<File>> files;
     std::vector<std::shared_ptr<Dirs>> dirs;
     //Dirs* pre;
     //std::vector<File*> files;
     //std::vector<Dirs*> dirs;
-    Dirs(const std::string& path="/CXX",const std::string& name="CXX",std::shared_ptr<Dirs> pre=nullptr,const std::string& limits="drw-")
+    Dirs(const std::string& path="/CXX",const std::string& name="CXX",std::shared_ptr<Dirs> pre=nullptr,const std::string& usr="root")
     {
-        this->name=name;
         this->path=path;
+        this->name=name;
         this->pre=pre;
-        this->limits=limits;
+        this->limits["root"]="-rwx";
+        if(usr!="root")
+            this->limits[usr]="-rwx";
     }
     Dirs(const Dirs&)=default;
     Dirs(Dirs&&)=default;
@@ -89,25 +103,37 @@ struct Dirs
         //os << "path: " << path << " name: " << name ;
         //os<<"path: "<<dir.path<<" name: "<<dir.name<<" limits: "<<dir.limits<<std::endl;
         char buf[4096];
-        sprintf(buf,"path: %-20s name: %-20s limits: %-20s\n",dir.path.c_str(),dir.name.c_str(),dir.limits.c_str());
+        sprintf(buf,"path: %-20s name: %-20s ",dir.path.c_str(),dir.name.c_str());
         os<<buf;
+        for(auto& i:dir.limits)
+        {
+            os<<i.first<<" "<<i.second<<" ";
+        }
+        os<<std::endl;
         return os;
     }
 
     friend std::istream& operator>>(std::istream& is,Dirs& dir)
     {
         std::string pass;
-        is>>pass>>dir.path>>pass>>dir.name>>pass>>dir.limits;
+        is>>pass>>dir.path>>pass>>dir.name;
+        std::string usrname,limit;
+        while(is>>usrname>>limit)
+        {
+            dir.limits[usrname]=limit;
+        }
         return is;
     }
 };
 
 class Net;
+class kernel;
 
 class Mem
 {
 private:
     friend class Net;
+    friend class kernel;
     std::shared_ptr<Dirs> root;
     std::shared_ptr<Dirs> current;
     //Dirs* root;
@@ -117,6 +143,8 @@ private:
     std::unordered_map<std::pair<int,int>,std::shared_ptr<File>> fileMap;
     std::unordered_map<std::string,std::shared_ptr<Dirs>> dirMap;
     std::string fits;
+    std::string usrname;
+    std::unordered_map<std::string,std::string> usrMap;
 private:
     //Mem
     int alloc(int len);
@@ -135,12 +163,24 @@ private:
     void impldel(std::shared_ptr<Dirs> curdir,const std::string& name); //delete file
     template<typename T>
     void implchmod(T t,const std::vector<std::string>& args);
+
+    template<typename T>
+    bool hasPermission(T t,const std::string& funcusrname);
+
+    template<typename T>
+    bool hasPermission(T t,const std::string& funcusrname,const char& limit);
 public:
     Mem(unsigned int capacity=1024,const std::string& fits="firstfit");
     Mem(const Mem&)=delete;
     Mem(Mem&&)=delete;
     Mem& operator=(const Mem&)=delete;
     Mem& operator=(Mem&&)=delete;
+
+    //system
+    bool login(const std::string& funcusrname,const std::string& password);
+    void logout();
+    void addusr(const std::string& funcusrname,const std::string& password);
+    void delusr(const std::string& funcusrname);
 
     //Mem
     void compact();
@@ -164,8 +204,9 @@ public:
     void edit(const std::string& args);//edit file
     void fc(const std::string& args1,const std::string& args2); //file compare
     void cat(const std::string& args); //cat file
-    void chmod(const std::string& init,const std::vector<std::string>& args); //chmod (file or dir
+    void chmod(const std::string& init,const std::vector<std::string>& args); //chmod (file or dir)
     void showmod(const std::string& init); //show mod
+    void chmon(const std::string& init,const std::string& toaddname,bool flag=true); //add user
     void cd(const std::string& name); //change directory
     void copy(const std::string& src,const std::string& dst); //copy file
     void move(const std::string& src,const std::string& dst); //move file
@@ -181,4 +222,12 @@ public:
     //Serial
     friend std::ostream& operator<<(std::ostream& os,const Mem& mem);
     friend std::istream& operator>>(std::istream& os,Mem& mem);
+};
+
+enum
+{
+    ISDIR,
+    READ,
+    WRITE,
+    EXECUTE
 };
