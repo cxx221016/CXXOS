@@ -1,2 +1,0 @@
-D:\CodeBlocks\MinGW\bin\ar.exe qc D:\MY_CODE\CPP\OS\lib\libVMem.a CMakeFiles/VMem.dir/src/VMem.cpp.obj
-D:\CodeBlocks\MinGW\bin\ranlib.exe D:\MY_CODE\CPP\OS\lib\libVMem.a

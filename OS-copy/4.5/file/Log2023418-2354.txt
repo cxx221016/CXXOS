@@ -1,0 +1,4 @@
+load from file
+dir
+status
+exit

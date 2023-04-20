@@ -1,6 +1,0 @@
-D:/MY_CODE/CXXOS/OS/build/CMakeFiles/Mem.dir
-D:/MY_CODE/CXXOS/OS/build/CMakeFiles/VMem.dir
-D:/MY_CODE/CXXOS/OS/build/CMakeFiles/Net.dir
-D:/MY_CODE/CXXOS/OS/build/CMakeFiles/main.dir
-D:/MY_CODE/CXXOS/OS/build/CMakeFiles/edit_cache.dir
-D:/MY_CODE/CXXOS/OS/build/CMakeFiles/rebuild_cache.dir

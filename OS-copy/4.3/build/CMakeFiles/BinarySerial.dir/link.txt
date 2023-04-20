@@ -1,2 +1,0 @@
-D:\CodeBlocks\MinGW\bin\ar.exe qc D:\MY_CODE\CXXOS\OS\lib\libBinarySerial.a CMakeFiles/BinarySerial.dir/src/BinarySerial.cpp.obj
-D:\CodeBlocks\MinGW\bin\ranlib.exe D:\MY_CODE\CXXOS\OS\lib\libBinarySerial.a

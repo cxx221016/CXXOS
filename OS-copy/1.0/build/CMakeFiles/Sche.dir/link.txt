@@ -1,2 +1,0 @@
-D:\CodeBlocks\MinGW\bin\ar.exe qc D:\MY_CODE\CPP\OS\lib\libSche.a CMakeFiles/Sche.dir/src/Sche.cpp.obj CMakeFiles/Sche.dir/src/Task.cpp.obj
-D:\CodeBlocks\MinGW\bin\ranlib.exe D:\MY_CODE\CPP\OS\lib\libSche.a

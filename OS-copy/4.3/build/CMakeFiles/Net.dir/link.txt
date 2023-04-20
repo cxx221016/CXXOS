@@ -1,2 +1,0 @@
-D:\CodeBlocks\MinGW\bin\ar.exe qc D:\MY_CODE\CXXOS\OS\lib\libNet.a CMakeFiles/Net.dir/src/Mem.cpp.obj CMakeFiles/Net.dir/src/net.cpp.obj
-D:\CodeBlocks\MinGW\bin\ranlib.exe D:\MY_CODE\CXXOS\OS\lib\libNet.a

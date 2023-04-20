@@ -1,0 +1,9 @@
+load from file
+dir
+chmod +x 2.cpp
+dir
+dir
+chmos +x /CXX 2.cpp
+chmod +x /CXX 2.cpp
+dir
+exit

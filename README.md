@@ -16,6 +16,7 @@
     - [VERSION 4.1](#version-41)
     - [VERSION 4.2](#version-42)
     - [VERSION 4.3](#version-43)
+    - [VERSION 4.4](#version-44)
   - [CONFIG](#config)
     - [request](#request)
     - [config](#config-1)
@@ -255,6 +256,11 @@ private:
 > > findfile,finddir优化
 > > fc
 > > cat
+
+
+### VERSION 4.4
+> > 更改文件索引方式以及底层实现
+> > 增加相应文件操作
   
 ## CONFIG
 

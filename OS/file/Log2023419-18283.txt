@@ -1,0 +1,7 @@
+load from file
+dir
+cd dir2
+dir
+rd /CXX/dir2/*
+dir
+exit
