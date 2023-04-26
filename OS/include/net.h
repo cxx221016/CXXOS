@@ -1,4 +1,5 @@
 #pragma once
+#ifdef _WIN32
 #include <winsock2.h>
 #include <windows.h>
 #include <iostream>
@@ -27,3 +28,4 @@ public:
 
 
 // Path: OS\src\net.cpp
+#endif

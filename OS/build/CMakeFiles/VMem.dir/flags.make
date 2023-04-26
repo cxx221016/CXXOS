@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = @CMakeFiles/VMem.dir/includes_CXX.rsp
 
-CXX_FLAGS =  -std=c++17 -lws2_32 -g -std=gnu++17
+CXX_FLAGS =  -std=c++17 -lws2_32 -O3 -DNDEBUG -std=gnu++17
 

@@ -308,11 +308,13 @@ std::shared_ptr<File> Mem::findFile(const std::string& init)
 
 std::shared_ptr<Dirs> Mem::findDir(const std::string& init)
 {
-    if(dirMap.find(init)==dirMap.end())
+    auto tmp=dirsplitPath(init);
+    std::string curinit=tmp.first+'/'+tmp.second;
+    if(dirMap.find(curinit)==dirMap.end())
     {
         return nullptr;
     }
-    return dirMap[init];
+    return dirMap[curinit];
 }
 
 void Mem::eraseFile(std::shared_ptr<File> file)
@@ -345,7 +347,8 @@ void Mem::implmd(std::shared_ptr<Dirs> curdir,const std::string &name) // make d
         }
     }
     std::string path = curdir->path + "/" + name;
-    auto newDir = std::make_shared<Dirs>(path, name, curdir);
+    auto newDir = std::make_shared<Dirs>(path, name, curdir,this->usrname);
+    //newDir->limits=curdir->limits;
     curdir->dirs.push_back(newDir);
     dirMap[path] = curdir->dirs.back();
 }
@@ -388,7 +391,7 @@ void Mem::impltype(std::shared_ptr<Dirs> curdir,const std::string &name, int len
         return;
     }
     std::string path = curdir->path;
-    auto newFile = std::make_shared<File>(path, name, address, len, data);
+    auto newFile = std::make_shared<File>(path, name, address, len, data,this->usrname);
     fileMap[std::make_pair(address, address + len - 1)] = newFile;
     curdir->files.push_back(newFile);
 }
@@ -433,6 +436,11 @@ void Mem::md(const std::string& init)
     {
         return;
     }
+    if(!hasPermission(dir,usrname,'w'))
+    {
+        std::cerr<<"Error: Permission denied.\n";
+        return;
+    }
    implmd(dir,tmp.second);
 
 }
@@ -443,6 +451,11 @@ void Mem::rd(const std::string& init)
     auto dir=findDir(tmp.first);
     if(dir==nullptr)
     {
+        return;
+    }
+    if(!hasPermission(dir,usrname,'w'))
+    {
+        std::cerr<<"Error: Permission denied.\n";
         return;
     }
     implrd(dir,tmp.second);
@@ -456,6 +469,11 @@ void Mem::type(const std::string &init,int len,const std::string &data)
     {
         return;
     }
+    if(!hasPermission(dir,usrname,'w'))
+    {
+        std::cerr<<"Error: Permission denied.\n";
+        return;
+    }
     impltype(dir,tmp.second,len,data);
 }
 void Mem::del(const std::string& init)
@@ -464,6 +482,11 @@ void Mem::del(const std::string& init)
     auto dir=findDir(tmp.first);
     if(dir==nullptr)
     {
+        return;
+    }
+    if(!hasPermission(dir,usrname,'w'))
+    {
+        std::cerr<<"Error: Permission denied.\n";
         return;
     }
     impldel(dir,tmp.second);
@@ -479,11 +502,11 @@ void Mem::ren(const std::string& args,std::string newname)
     {
         return;
     }
-    if(file!=nullptr)
+    if(file!=nullptr&& hasPermission(file,this->usrname,'w'))
     {
         file->name=newname;
     }
-    else
+    if(dir!=nullptr&& hasPermission(dir,this->usrname,'w'))
     {
         dir->name=newname;
     }
@@ -495,6 +518,11 @@ void Mem::edit(const std::string& args)
     auto file=findFile(args);
     if(file==nullptr)
     {
+        return;
+    }
+    if(!hasPermission(file,this->usrname,'w'))
+    {
+        std::cerr<<"Error: Permission denied.\n";
         return;
     }
     std::cout<<"Begin editing. Press Ctrl+Z to end.\n";
@@ -511,6 +539,11 @@ void Mem::fc(const std::string& args1,const std::string& args2)
     if(file1==nullptr || file2==nullptr)
     {
         std::cerr<<"Error: File not found.\n";
+        return;
+    }
+    if(!hasPermission(file1,this->usrname,'r') || !hasPermission(file2,this->usrname,'r'))
+    {
+        std::cerr<<"Error: Permission denied.\n";
         return;
     }
     if(file1->data==file2->data)
@@ -554,6 +587,11 @@ void Mem::cat(const std::string& args)
     {
         return;
     }
+    if(!hasPermission(file,this->usrname,'r'))
+    {
+        std::cerr<<"Error: Permission denied.\n";
+        return;
+    }
     std::cout<<file->data<<std::endl;
 }
 
@@ -565,11 +603,11 @@ void Mem::cat(const std::string& args)
     {
         return;
     }
-    if(file!=nullptr)
+    if(file!=nullptr&& hasPermission(file,this->usrname))
     {
         implchmod(file,args);
     }
-    if(dir!=nullptr)
+    if(dir!=nullptr&& hasPermission(dir,this->usrname))
     {
         implchmod(dir,args);
     }
@@ -848,16 +886,20 @@ void Mem::copy(const std::string& src,const std::string& dst)
     */
     auto file=findFile(src);
     if(!file) return;
+    if(!hasPermission(file,this->usrname,'r')) return;
     auto dir=findDir(dst);
     if(!dir) return;
+    if(!hasPermission(dir,this->usrname,'w')) return;
     impltype(dir,file->name,file->len,file->data);
 }
 void Mem::move(const std::string& src,const std::string& dst)
 {
     auto file=findFile(src);
     if(!file) return;
+    if(!hasPermission(file,this->usrname,'r')) return;
     auto dir=findDir(dst);
     if(!dir) return;
+    if(!hasPermission(dir,this->usrname,'w')) return;
     impltype(dir,file->name,file->len,file->data);
     auto tmp=filesplitPath(src);
     auto dir2=findDir(tmp.first);

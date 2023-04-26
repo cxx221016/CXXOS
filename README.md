@@ -18,6 +18,7 @@
     - [VERSION 4.3](#version-43)
     - [VERSION 4.4](#version-44)
     - [VERSION 5.0](#version-50)
+    - [VERSION 5.1](#version-51)
   - [CONFIG](#config)
     - [request](#request)
     - [config](#config-1)
@@ -268,6 +269,9 @@ private:
 > > 添加用户以及对应权限
 > > 对于各函数权限细化，首先通过函数判断是否具有权限
 > > 增加改变用户
+
+### VERSION 5.1
+> > 对用户进行了更深层次的限制
   
 ## CONFIG
 

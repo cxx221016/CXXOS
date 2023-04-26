@@ -93,5 +93,5 @@
     "C_Cpp.default.cStandard": "c17",
     "C_Cpp.inlayHints.autoDeclarationTypes.showOnLeft": true,
     "hexeditor.showOpenFileButton": true,
-    "cmake.sourceDirectory": "${workspaceFolder}/OS-copy/3.9",
+    "C_Cpp.intelliSenseCacheSize": 512,
 }

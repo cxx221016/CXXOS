@@ -126,6 +126,9 @@ struct Dirs
     }
 };
 
+static std::string innerdata="cxxos";
+static std::string innerfits="firstfit";
+
 class Net;
 class kernel;
 
@@ -170,7 +173,7 @@ private:
     template<typename T>
     bool hasPermission(T t,const std::string& funcusrname,const char& limit);
 public:
-    Mem(unsigned int capacity=1024,const std::string& fits="firstfit");
+    Mem(unsigned int capacity=1024,const std::string& fits=innerfits);
     Mem(const Mem&)=delete;
     Mem(Mem&&)=delete;
     Mem& operator=(const Mem&)=delete;
@@ -197,8 +200,8 @@ public:
     //void addDir(const std::string& path,const std::string& name);//add dir
     void md(const std::string& init); //make directory
     void rd(const std::string& init); //remove directory
-    void impltype(std::shared_ptr<Dirs> curdir,const std::string &name,int len=12,const std::string &data="cxxos"); //type file
-    void type(const std::string &init,int len=12,const std::string &data="cxxos"); //type file
+    void impltype(std::shared_ptr<Dirs> curdir,const std::string &name,int len=12,const std::string &data=innerdata); //type file
+    void type(const std::string &init,int len=12,const std::string &data=innerdata); //type file
     void del(const std::string& init); //delete file
     void ren(const std::string& args,std::string newname); //rename file
     void edit(const std::string& args);//edit file
@@ -224,10 +227,3 @@ public:
     friend std::istream& operator>>(std::istream& os,Mem& mem);
 };
 
-enum
-{
-    ISDIR,
-    READ,
-    WRITE,
-    EXECUTE
-};

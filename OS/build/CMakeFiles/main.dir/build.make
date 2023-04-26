@@ -96,6 +96,7 @@ D:/MY_CODE/CXXOS/OS/bin/main.exe: D:/MY_CODE/CXXOS/OS/lib/libMem.a
 D:/MY_CODE/CXXOS/OS/bin/main.exe: D:/MY_CODE/CXXOS/OS/lib/libVMem.a
 D:/MY_CODE/CXXOS/OS/bin/main.exe: D:/MY_CODE/CXXOS/OS/lib/libNet.a
 D:/MY_CODE/CXXOS/OS/bin/main.exe: D:/MY_CODE/CXXOS/OS/lib/libBinarySerial.a
+D:/MY_CODE/CXXOS/OS/bin/main.exe: D:/MY_CODE/CXXOS/OS/lib/libNet.a
 D:/MY_CODE/CXXOS/OS/bin/main.exe: CMakeFiles/main.dir/linkLibs.rsp
 D:/MY_CODE/CXXOS/OS/bin/main.exe: CMakeFiles/main.dir/objects1.rsp
 D:/MY_CODE/CXXOS/OS/bin/main.exe: CMakeFiles/main.dir/link.txt

@@ -78,7 +78,7 @@ public:
         }
         else
         {
-            bash("null");
+            //bash("null");
             log.push_back("no load");
             std::cout<<"please input your password of user "<<mem->usrname<<": ";
             std::string password;
@@ -100,6 +100,7 @@ public:
 
     ~kernel()
     {
+        #ifdef LOG
         static std::string base = "..\\file\\Log";
         static std::string ext = ".txt";
         std::time_t t = std::time(nullptr);
@@ -113,6 +114,7 @@ public:
             ofs << i << '\n';
         }
         ofs.close();
+        #endif
     }
 
     void run()
@@ -181,6 +183,14 @@ bool kernel::bash(const std::vector<std::string> &cmds)
             cmd = strs[idx++];
         }
         else if constexpr (std::is_same_v<T, int> || std::is_same_v<T, unsigned int>)
+        {
+            cmd = std::stoi(strs[idx++]);
+        }
+        else if constexpr (std::is_same_v<T, double>)
+        {
+            cmd = std::stod(strs[idx++]);
+        }
+        else if constexpr (std::is_same_v<T, bool>)
         {
             cmd = std::stoi(strs[idx++]);
         }
@@ -329,9 +339,14 @@ bool kernel::bash(const std::vector<std::string> &cmds)
         {
             std::string init;
             std::string usr;
+            std::string tmpflag;
             get(init, idx, cmds);
             get(usr, idx, cmds);
-            mem->chmon(init,usr);
+            if(get(tmpflag, idx, cmds,false)&&tmpflag=="-")
+            {
+                 mem->chmon(init,usr,false);
+            }
+            else mem->chmon(init,usr);
         }
         else if (cmd == "md")
         {
@@ -604,6 +619,7 @@ bool kernel::bash(const std::vector<std::string> &cmds)
         {
             memtable.show();
         }
+        #ifdef _WIN32
         else if (cmd == "net")
         {
             try
@@ -616,6 +632,7 @@ bool kernel::bash(const std::vector<std::string> &cmds)
                 // std::cerr << e.what() << '\n';
             }
         }
+        #endif
         else if (cmd == "help")
         {
             std::unordered_set<std::string> cmdset{cmds.begin() + 1, cmds.end()};
@@ -635,6 +652,9 @@ bool kernel::bash(const std::vector<std::string> &cmds)
             {
                 std::cout << "system\n";
                 std::cout << "user: show user\n";
+                std::cout << "login <usrname> <password>: login\n";
+                std::cout << "logout: logout\n";
+                std::cout << "changeusr <usrname> <password>: change user\n";
                 std::cout << "exit: exit\n";
                 std::cout << "debug: show mem\n";
                 std::cout << "version: show version\n";
@@ -704,11 +724,13 @@ bool kernel::bash(const std::vector<std::string> &cmds)
             }
 
             // net
+            #ifdef _WIN32
             if (cmdset.count("-netop"))
             {
                 std::cout << "netop\n";
                 std::cout << "net: run net\n";
             }
+            #endif
         }
         else if (cmd == "null")
         {
