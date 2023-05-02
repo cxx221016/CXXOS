@@ -75,7 +75,8 @@
         "stdio.h": "c",
         "variant": "cpp",
         "pmap.h": "c",
-        "any": "cpp"
+        "any": "cpp",
+        "queue": "cpp"
     },
     "C_Cpp.errorSquiggles": "enabled",
     "C_Cpp.default.cppStandard": "c++20",

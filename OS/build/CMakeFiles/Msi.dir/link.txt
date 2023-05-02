@@ -1,0 +1,2 @@
+D:\CodeBlocks\MinGW\bin\ar.exe qc D:\MY_CODE\CXXOS\OS\lib\libMsi.a CMakeFiles/Msi.dir/src/BinarySerial.cpp.obj CMakeFiles/Msi.dir/src/Msi.cpp.obj
+D:\CodeBlocks\MinGW\bin\ranlib.exe D:\MY_CODE\CXXOS\OS\lib\libMsi.a

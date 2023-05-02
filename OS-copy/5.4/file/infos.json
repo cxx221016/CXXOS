@@ -1,0 +1,26 @@
+{
+    "kernelinfos":
+    {
+        "name": "kernel",
+        "version": "1.0.0",
+        "description": "kernel",
+        "author": "kernel",
+        "license": "kernel",
+        "url": "kernel",
+        "dependencies": {
+            "kernel": "1.0.0"
+        }
+    },
+    "userinfos":
+    {
+        "name": "usr",
+        "version": "1.0.0",
+        "description": "usr",
+        "author": "usr",
+        "license": "usr",
+        "url": "usr",
+        "dependencies": {
+            "usr": "1.0.0"
+        }
+    }
+}
