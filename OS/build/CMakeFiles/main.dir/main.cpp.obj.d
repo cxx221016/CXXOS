@@ -207,8 +207,14 @@ CMakeFiles/main.dir/main.cpp.obj: D:\MY_CODE\CXXOS\OS\main.cpp \
  D:/CodeBlocks/MinGW/lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/bits/codecvt.h \
  D:/CodeBlocks/MinGW/lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/bits/unique_ptr.h \
  D:/CodeBlocks/MinGW/lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/bits/quoted_string.h \
+ D:/CodeBlocks/MinGW/lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/thread \
  D:\MY_CODE\CXXOS\OS\include/BinarySerial.h \
  D:\MY_CODE\CXXOS\OS\include/VMem.h D:\MY_CODE\CXXOS\OS\include/Net.h \
  D:\MY_CODE\CXXOS\OS\include/mount.h D:\MY_CODE\CXXOS\OS\include/Msi.h \
+ D:\MY_CODE\CXXOS\OS\include/CPU.h \
  D:/CodeBlocks/MinGW/lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/unordered_set \
- D:/CodeBlocks/MinGW/lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/bits/unordered_set.h
+ D:/CodeBlocks/MinGW/lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/bits/unordered_set.h \
+ D:/CodeBlocks/MinGW/lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/cstring \
+ D:/CodeBlocks/MinGW/x86_64-w64-mingw32/include/string.h \
+ D:/CodeBlocks/MinGW/x86_64-w64-mingw32/include/sec_api/string_s.h \
+ D:/MY_CODE/CXXOS/OS/src/CPU.cpp

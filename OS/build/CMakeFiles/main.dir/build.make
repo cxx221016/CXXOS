@@ -94,7 +94,6 @@ D:/MY_CODE/CXXOS/OS/bin/main.exe: CMakeFiles/main.dir/main.cpp.obj
 D:/MY_CODE/CXXOS/OS/bin/main.exe: CMakeFiles/main.dir/build.make
 D:/MY_CODE/CXXOS/OS/bin/main.exe: D:/MY_CODE/CXXOS/OS/lib/libMem.a
 D:/MY_CODE/CXXOS/OS/bin/main.exe: D:/MY_CODE/CXXOS/OS/lib/libBinarySerial.a
-D:/MY_CODE/CXXOS/OS/bin/main.exe: D:/MY_CODE/CXXOS/OS/lib/libMsi.a
 D:/MY_CODE/CXXOS/OS/bin/main.exe: CMakeFiles/main.dir/linkLibs.rsp
 D:/MY_CODE/CXXOS/OS/bin/main.exe: CMakeFiles/main.dir/objects1.rsp
 D:/MY_CODE/CXXOS/OS/bin/main.exe: CMakeFiles/main.dir/link.txt

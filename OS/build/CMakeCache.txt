@@ -236,14 +236,17 @@ CMAKE_STRIP:FILEPATH=D:/CodeBlocks/MinGW/bin/strip.exe
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
+//Enable process
+CPU:BOOL=ON
+
 //Enable log
-LOG:BOOL=ON
+LOG:BOOL=OFF
 
 //Enable mount
 MOUNT:BOOL=OFF
 
 //Enable MSI
-MSI:BOOL=ON
+MSI:BOOL=OFF
 
 //Enable network
 NET:BOOL=OFF

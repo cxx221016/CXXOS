@@ -1,1 +1,1 @@
- D:/MY_CODE/CXXOS/OS/lib/libMem.a D:/MY_CODE/CXXOS/OS/lib/libBinarySerial.a D:/MY_CODE/CXXOS/OS/lib/libMsi.a -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 
+ D:/MY_CODE/CXXOS/OS/lib/libMem.a D:/MY_CODE/CXXOS/OS/lib/libBinarySerial.a -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 

@@ -1,4 +1,4 @@
-#pragma
+#pragma once
 #ifdef CXX_THREADPOOL
 #include <iostream>
 #include<thread>

@@ -1,6 +1,5 @@
 D:/MY_CODE/CXXOS/OS/build/CMakeFiles/Mem.dir
 D:/MY_CODE/CXXOS/OS/build/CMakeFiles/BinarySerial.dir
-D:/MY_CODE/CXXOS/OS/build/CMakeFiles/Msi.dir
 D:/MY_CODE/CXXOS/OS/build/CMakeFiles/main.dir
 D:/MY_CODE/CXXOS/OS/build/CMakeFiles/edit_cache.dir
 D:/MY_CODE/CXXOS/OS/build/CMakeFiles/rebuild_cache.dir

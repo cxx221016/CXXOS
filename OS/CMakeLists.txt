@@ -2,10 +2,11 @@ cmake_minimum_required(VERSION 3.10)
 project(cxxos)
 option(LOG "Enable log" OFF)
 option(MOUNT "Enable mount" OFF)
-option(MSI "Enable MSI" ON)
+option(MSI "Enable MSI" OFF)
 option(NET "Enable network" OFF)
 option(THREADPOOL "Enable thread pool" OFF)
 option(VMEM "Enable virtual memory" OFF)
+option(CPU "Enable process" ON)
 
 if(LOG)
     add_compile_definitions(CXX_LOG)
@@ -24,6 +25,9 @@ if(THREADPOOL)
 endif()
 if(VMEM)
     add_compile_definitions(CXX_VMEM)
+endif()
+if(CPU)
+    add_compile_definitions(CXX_CPU)
 endif()
 set(CMAKE_CXX_STANDARD 17)
 
@@ -60,6 +64,7 @@ if(MSI)
 add_library(Msi STATIC ${PROJECT_SOURCE_DIR}/src/BinarySerial.cpp ${PROJECT_SOURCE_DIR}/src/Msi.cpp)
 endif()
 
+
 add_executable(main ${PROJECT_SOURCE_DIR}/main.cpp)
 target_link_libraries(main Mem  BinarySerial)
 if(VMEM)
@@ -78,3 +83,6 @@ if(WIN32)
     target_link_libraries(main Mount comdlg32)
     endif()
 endif()
+
+
+

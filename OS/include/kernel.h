@@ -6,6 +6,7 @@
 #include "BinarySerial.h"
 #include "mount.h"
 #include "Msi.h"
+#include "CPU.h"
 #include <type_traits>
 #include <optional>
 #include <unordered_set>
@@ -46,6 +47,9 @@ class kernel
     #endif
     #ifdef CXX_MSI
     std::shared_ptr<Msi> msi = std::make_shared<Msi>();
+    #endif
+    #ifdef CXX_CPU
+    std::shared_ptr<Process> process = std::make_shared<Process>(1, 0.5);
     #endif
     std::vector<std::string> log;
     static void infos()
@@ -494,6 +498,63 @@ bool kernel::bash(const std::vector<std::string> &cmds)
                 // printf("Running task =name : [%s] ; priority: [%d] ; burst [%d] for %d units. Pid = [%d].",task.second.name.c_str(), task.second.priority, task.second.burst,task.second.burst,task.second.pid);
                 printf("Running task =name : [%s] ; Pid = [%d] ; Res=[%d]\n", res.second.name.c_str(), res.second.pid, res.first.get());
             }
+        }
+        #endif
+        #ifdef CXX_CPU
+        else if(cmd=="top")
+        {
+            process->top();
+        }
+        else if(cmd=="kill")
+        {
+            std::string pid;
+            get(pid, idx, cmds);
+            if(Process::isnum(pid)) process->kill(std::stoi(pid));
+            else process->kill(pid);
+        }
+        else if(cmd=="create")
+        {
+            std::string name;
+            std::string args;
+            bool cur=true;
+            get(name, idx, cmds);
+            get(args, idx, cmds);
+            get(cur, idx, cmds, false);
+            if(Process::isnum(args)) process->create(name,std::stoi(args),cur);
+            else process->create(name,args,cur);
+        }
+        else if(cmd=="add")
+        {
+            std::string args;
+            int CPU,Memory,Disk,Network,GPU;
+            get(args, idx, cmds);
+            get(CPU, idx, cmds,false);
+            get(Memory, idx, cmds,false);
+            get(Disk, idx, cmds,false);
+            get(Network, idx, cmds,false);
+            get(GPU, idx, cmds,false);
+            if(Process::isnum(args)) process->add(std::stoi(args),CPU,Memory,Disk,Network,GPU);
+            else process->add(args,CPU,Memory,Disk,Network,GPU);
+        }
+        else if(cmd=="remove")
+        {
+            std::string args;
+            get(args, idx, cmds);
+            int newstatus;
+            if(get(newstatus, idx, cmds,false))
+            {
+                if(Process::isnum(args)) process->remove(std::stoi(args),newstatus);
+                else process->remove(args,newstatus);
+            }
+            else
+            {
+                if(Process::isnum(args)) process->remove(std::stoi(args));
+                else process->remove(args);
+            }
+        }
+        else if(cmd=="runstatus")
+        {
+            process->runningstatus();
         }
         #endif
         else if (cmd == "dir")

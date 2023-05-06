@@ -1,4 +1,4 @@
-#pragma
+#pragma once
 //#define CXX_MSI
 #ifdef CXX_MSI
 #include<iostream>

@@ -13,6 +13,7 @@
     - [Net module--VERSION4.0](#net-module--version40)
     - [mount module--VERSION5.0](#mount-module--version50)
     - [Msi module--VERSION5.0](#msi-module--version50)
+    - [CPU module--VERSION5.4](#cpu-module--version54)
   - [UPDATE](#update)
     - [VERSION 3.1](#version-31)
     - [VERSION 3.9](#version-39)
@@ -33,6 +34,7 @@
     - [2023 4.9](#2023-49)
     - [2023 4.16](#2023-416)
     - [2023 5.2](#2023-52)
+    - [2023 5.6](#2023-56)
 
 ## 摘要
 
@@ -327,7 +329,83 @@ class Msi
 };
 ```
 
+
 > 包管理头文件
+
+### CPU module--VERSION5.4
+
+```cpp
+struct ProcessNode
+{
+    std::string name;
+    int pid;
+    int status;
+    int CPU,Memory,Disk,Network,GPU;
+    std::shared_ptr<ProcessNode> parent;
+    std::vector<std::shared_ptr<ProcessNode>> children;
+};
+
+
+class Process
+{
+private:
+    std::unordered_map<std::string,std::shared_ptr<ProcessNode>> name_table;
+    std::unordered_map<int,std::shared_ptr<ProcessNode>> pid_table;
+    std::priority_queue<std::shared_ptr<ProcessNode>> pri_queue;
+
+    int pidcnt=1;
+    double time_slice;
+    std::shared_ptr<ProcessNode> running;
+    std::unordered_set<std::shared_ptr<ProcessNode>> ready_queue;
+    double cpu=0,mem=0,disk=0,network=0,gpu=0;
+    double wave;
+public:
+    template<typename T>
+    std::shared_ptr<ProcessNode> findNode(T&& args);
+
+    template<typename T>
+    bool kill(T&& args);
+
+    template<typename T>
+    std::shared_ptr<ProcessNode> create(const std::string& name,T&& args,bool flag=true);
+
+    void top(int n=10);
+
+    template<typename T>
+    void add(T&& args,int CPU=40,int Memory=2,int Disk=2,int Network=2,int GPU=2);
+
+    template<typename T>
+    void change(T&& args,int CPU=0,int Memory=0,int Disk=0,int Network=0,int GPU=0);
+
+    template<typename T>
+    void remove(T&& args,int newstatus=EXIT);
+
+    int Wave(int args);
+
+    template <typename F, typename... Args>
+    void Invoke(double delaytime, F &&f, Args &&...args)
+    {
+        //std::function<void()> func = std::bind(std::forward<F>(f), std::forward<Args>(args)...);
+        std::thread tmp([=]()
+                    {
+                        std::this_thread::sleep_for(std::chrono::seconds(static_cast<int>(delaytime)));
+                        //func(); 
+                        //std::invoke(f, args...);
+                    });
+        tmp.detach();
+    }
+
+    static bool isnum(const std::string& str);
+    template<typename T>
+    void changerunning(T&& args);
+
+    void runningstatus();
+};
+```
+
+> 进程控制模块，陷入误区较大
+> 头文件名称最初为Process.h，会导致严重报错，应该是与C++库头文件重名
+> 关于T&&以及decay以及is_same_v，有了更深刻的理解，传参表可能有错误，以及编译器确定需要使用constexpr
 
 ## UPDATE
 ### VERSION 3.1 
@@ -384,6 +462,7 @@ class Msi
 
 ### VERSION 5.4
 > 增加了包管理功能
+> 增加了进程管理功能
 
 
 ## CONFIG
@@ -402,6 +481,7 @@ option(NET "Enable network" OFF)
 option(THREADPOOL "Enable thread pool" OFF)
 option(VMEM "Enable virtual memory" OFF)
 
+
 if(LOG)
     add_compile_definitions(CXX_LOG)
 endif()
@@ -419,6 +499,9 @@ if(THREADPOOL)
 endif()
 if(VMEM)
     add_compile_definitions(CXX_VMEM)
+endif()
+if(CPU)
+    add_compile_definitions(CPU)
 endif()
 set(CMAKE_CXX_STANDARD 17)
 
@@ -484,6 +567,7 @@ endif()
 |NET|CXX_NET|网络模块([net.h](#net-module--version40))|-D NET=ON|
 |THREADPOOL|CXX_THREADPOOL|线程池模块([threadpool.h](#threadpool-module--version31))|-D THREADPOOL=ON|
 |VMEM|CXX_VMEM|虚拟内存模块([Vmem.h](#vmem-module----version31))|-D VMEM=ON|
+|CPU|CXX_CPU|进程控制模块([CPU.h](#cpu-module--version54))|-D CPU=ON|
 
 使用相应的cmake选项，可添加相应模块，或直接修改CMakeLists.txt
 
@@ -524,3 +608,6 @@ endif()
 
 ### 2023 5.2
 此后os主要方向转换为添加类似于mount,msi之类的模块，相应的，也会cmakelists也被更改，使用了optional，预定义宏来定下模块
+
+### 2023 5.6
+解决了头文件问题以及模板元编程的问题

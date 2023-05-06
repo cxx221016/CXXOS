@@ -1,4 +1,4 @@
-#pragma
+#pragma once
 #include <unordered_map>
 #include<map>
 #include <functional>
@@ -10,6 +10,7 @@
 #include<chrono>
 #include<iomanip>
 #include<optional>
+#include<thread>
 #include "BinarySerial.h"
 
 using namespace std::string_literals;
@@ -19,7 +20,7 @@ static const std::string constext=".bin";
 static const std::string consttxtmemtable="..\\file\\Memtable.txt";
 static const std::string constbinmemtable="..\\file\\Memtable.bin";
 
-std::unordered_map<std::string, std::function<int(int, int)>> opmap{
+static std::unordered_map<std::string, std::function<int(int, int)>> opmap{
     {"add"s, [](int a, int b)
      { return a + b; }},
     {"sub"s, [](int a, int b)
@@ -57,6 +58,18 @@ std::unordered_map<std::string, std::function<int(int, int)>> opmap{
     {"hello"s, [](int a, int b)
      {std::cout<<"Hello World!";return 0; }}};
 
+static bool isnum(const std::string &str)
+{
+    try
+    {
+        int num = std::stoi(str);
+        return true;
+    }
+    catch (const std::exception &e)
+    {
+        return false;
+    }
+}
 
 struct fileattr
 {

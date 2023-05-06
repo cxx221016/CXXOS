@@ -1,3 +1,0 @@
-load from file
-pip list
-exit

@@ -142,19 +142,6 @@ BinarySerial/fast:
 .PHONY : BinarySerial/fast
 
 #=============================================================================
-# Target rules for targets named Msi
-
-# Build rule for target.
-Msi: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 Msi
-.PHONY : Msi
-
-# fast build rule for target.
-Msi/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Msi.dir\build.make CMakeFiles/Msi.dir/build
-.PHONY : Msi/fast
-
-#=============================================================================
 # Target rules for targets named main
 
 # Build rule for target.
@@ -197,7 +184,6 @@ src/BinarySerial.obj: src/BinarySerial.cpp.obj
 # target to build an object file
 src/BinarySerial.cpp.obj:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\BinarySerial.dir\build.make CMakeFiles/BinarySerial.dir/src/BinarySerial.cpp.obj
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Msi.dir\build.make CMakeFiles/Msi.dir/src/BinarySerial.cpp.obj
 .PHONY : src/BinarySerial.cpp.obj
 
 src/BinarySerial.i: src/BinarySerial.cpp.i
@@ -206,7 +192,6 @@ src/BinarySerial.i: src/BinarySerial.cpp.i
 # target to preprocess a source file
 src/BinarySerial.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\BinarySerial.dir\build.make CMakeFiles/BinarySerial.dir/src/BinarySerial.cpp.i
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Msi.dir\build.make CMakeFiles/Msi.dir/src/BinarySerial.cpp.i
 .PHONY : src/BinarySerial.cpp.i
 
 src/BinarySerial.s: src/BinarySerial.cpp.s
@@ -215,7 +200,6 @@ src/BinarySerial.s: src/BinarySerial.cpp.s
 # target to generate assembly for a file
 src/BinarySerial.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\BinarySerial.dir\build.make CMakeFiles/BinarySerial.dir/src/BinarySerial.cpp.s
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Msi.dir\build.make CMakeFiles/Msi.dir/src/BinarySerial.cpp.s
 .PHONY : src/BinarySerial.cpp.s
 
 src/Mem.obj: src/Mem.cpp.obj
@@ -242,30 +226,6 @@ src/Mem.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Mem.dir\build.make CMakeFiles/Mem.dir/src/Mem.cpp.s
 .PHONY : src/Mem.cpp.s
 
-src/Msi.obj: src/Msi.cpp.obj
-.PHONY : src/Msi.obj
-
-# target to build an object file
-src/Msi.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Msi.dir\build.make CMakeFiles/Msi.dir/src/Msi.cpp.obj
-.PHONY : src/Msi.cpp.obj
-
-src/Msi.i: src/Msi.cpp.i
-.PHONY : src/Msi.i
-
-# target to preprocess a source file
-src/Msi.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Msi.dir\build.make CMakeFiles/Msi.dir/src/Msi.cpp.i
-.PHONY : src/Msi.cpp.i
-
-src/Msi.s: src/Msi.cpp.s
-.PHONY : src/Msi.s
-
-# target to generate assembly for a file
-src/Msi.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Msi.dir\build.make CMakeFiles/Msi.dir/src/Msi.cpp.s
-.PHONY : src/Msi.cpp.s
-
 # Help Target
 help:
 	@echo The following are some of the valid targets for this Makefile:
@@ -276,7 +236,6 @@ help:
 	@echo ... rebuild_cache
 	@echo ... BinarySerial
 	@echo ... Mem
-	@echo ... Msi
 	@echo ... main
 	@echo ... main.obj
 	@echo ... main.i
@@ -287,9 +246,6 @@ help:
 	@echo ... src/Mem.obj
 	@echo ... src/Mem.i
 	@echo ... src/Mem.s
-	@echo ... src/Msi.obj
-	@echo ... src/Msi.i
-	@echo ... src/Msi.s
 .PHONY : help
 
 
